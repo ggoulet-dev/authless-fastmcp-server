@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Build and deploy script for Cloudflare
+# Build and deploy script for Cloudflare Workers
 set -e
 
-echo "🚀 Deploying FastMCP Server to Cloudflare..."
+echo "🚀 Deploying MCP Server to Cloudflare Workers..."
 
 # Check if wrangler is installed
 if ! command -v wrangler &> /dev/null; then
@@ -11,39 +11,25 @@ if ! command -v wrangler &> /dev/null; then
     npm install -g wrangler
 fi
 
-# Build the application
-echo "📦 Building application..."
-uv sync
+# Install dependencies
+echo "📦 Installing dependencies..."
+npm install
 
-# Create a simple server wrapper for Cloudflare Workers
-echo "🔧 Creating Cloudflare Worker wrapper..."
-mkdir -p dist
-
-# Create the worker script
-cat > dist/index.js << 'EOF'
-import { FastMCP } from 'fastmcp';
-
-export default {
-  async fetch(request, env, ctx) {
-    // For now, redirect to your deployed FastMCP server
-    // This is a proxy approach until full Python support is available
-    const targetUrl = env.FASTMCP_SERVER_URL || 'https://your-server.example.com';
-    
-    return fetch(new Request(targetUrl + request.url.slice(request.url.indexOf('/', 8)), {
-      method: request.method,
-      headers: request.headers,
-      body: request.body
-    }));
-  }
-};
-EOF
+# Build the TypeScript application
+echo "� Building TypeScript application..."
+npm run build
 
 # Deploy to Cloudflare Workers
 echo "🌐 Deploying to Cloudflare Workers..."
-wrangler deploy
+npm run deploy
 
 echo "✅ Deployment complete!"
-echo "📋 Next steps:"
-echo "   1. Set up your FastMCP server on a cloud provider (Railway, Fly.io, etc.)"
-echo "   2. Update the FASTMCP_SERVER_URL environment variable in Cloudflare"
-echo "   3. Your MCP server will be available at: https://authless-fastmcp-server.your-subdomain.workers.dev"
+echo "📋 Your MCP server is now available at:"
+echo "   🌍 Production: https://authless-fastmcp-server.your-subdomain.workers.dev"
+echo "   🔧 MCP Endpoint: https://authless-fastmcp-server.your-subdomain.workers.dev/mcp"
+echo ""
+echo "🧪 Test your server:"
+echo "   curl https://authless-fastmcp-server.your-subdomain.workers.dev"
+echo ""
+echo "🔗 Connect to MCP clients using:"
+echo "   https://authless-fastmcp-server.your-subdomain.workers.dev/mcp"

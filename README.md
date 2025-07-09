@@ -69,43 +69,64 @@ asyncio.run(test_weather())
 
 ## Deployment to Cloudflare
 
-### Option 1: Remote MCP Server (Recommended)
+### Option 1: TypeScript Cloudflare Workers (Recommended)
 
-Since Cloudflare Workers has limited Python support, the best approach is to deploy your FastMCP server as a Remote MCP Server:
-
-1. **Deploy to a cloud platform** (Railway, Fly.io, Render, etc.):
-   ```bash
-   # Using the provided Dockerfile
-   docker build -t authless-fastmcp-server .
-   docker run -p 8000:8000 authless-fastmcp-server
-   ```
-
-2. **Configure as Remote MCP Server**:
-   - Your server will be accessible via HTTP at: `https://your-domain.com/mcp/`
-   - Connect MCP clients using: `https://your-domain.com/mcp/`
-
-### Option 2: Cloudflare Workers Proxy
-
-For Cloudflare-specific deployment:
+Since Cloudflare Python Workers are in beta with limited package support, we've created a TypeScript-based MCP server:
 
 1. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. **Deploy**:
+2. **Build and deploy**:
    ```bash
+   npm run build
    npm run deploy
    ```
 
-3. **Set environment variables** in Cloudflare Dashboard:
-   - `FASTMCP_SERVER_URL`: URL of your deployed FastMCP server
+3. **Development**:
+   ```bash
+   npm run dev  # Local Cloudflare Workers development
+   ```
+
+### Option 2: Python Development (Local/External Hosting)
+
+For Python development and testing:
+
+1. **Local development**:
+   ```bash
+   npm run python-dev
+   ```
+
+2. **Deploy to external platforms** (Railway, Fly.io, Render):
+   ```bash
+   # Using the provided Dockerfile
+   docker build -t authless-fastmcp-server .
+   docker run -p 8000:8000 authless-fastmcp-server
+   ```
+
+### Cloudflare Dashboard Settings
+
+For Cloudflare Pages/Workers dashboard:
+
+- **Build Command**: `npm run build`
+- **Deploy Command**: `npx wrangler deploy`
+- **Root Directory**: `/`
+- **Framework**: `None`
+
+### API Endpoints
+
+Once deployed, your MCP server provides:
+
+- **Health Check**: `https://your-worker.workers.dev/`
+- **MCP Endpoint**: `https://your-worker.workers.dev/mcp`
 
 ### Configuration Files
 
 - `wrangler.toml`: Cloudflare Workers configuration
-- `Dockerfile`: Container configuration for cloud deployment
-- `deploy.sh`: Automated deployment script
+- `tsconfig.json`: TypeScript compilation settings
+- `src/index.ts`: Main Cloudflare Worker code
+- `package.json`: Node.js dependencies and scripts
 
 ## Development
 
