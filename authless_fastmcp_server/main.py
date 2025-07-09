@@ -3,6 +3,7 @@ A simple MCP server with a basic weather tool.
 """
 
 import random
+import os
 from fastmcp import FastMCP
 
 # Create the MCP server instance
@@ -31,8 +32,12 @@ def get_weather(location: str = "Paris") -> str:
 
 def main():
     """Main entry point for the server."""
-    if __name__ == "__main__":
-        mcp.run()
+    # For remote deployment, use HTTP transport
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", 8000))
+    
+    # Use streamable HTTP transport for remote MCP servers
+    mcp.run(transport="http", host=host, port=port)
 
 if __name__ == "__main__":
-    mcp.run()
+    main()

@@ -67,6 +67,46 @@ async def test_weather():
 asyncio.run(test_weather())
 ```
 
+## Deployment to Cloudflare
+
+### Option 1: Remote MCP Server (Recommended)
+
+Since Cloudflare Workers has limited Python support, the best approach is to deploy your FastMCP server as a Remote MCP Server:
+
+1. **Deploy to a cloud platform** (Railway, Fly.io, Render, etc.):
+   ```bash
+   # Using the provided Dockerfile
+   docker build -t authless-fastmcp-server .
+   docker run -p 8000:8000 authless-fastmcp-server
+   ```
+
+2. **Configure as Remote MCP Server**:
+   - Your server will be accessible via HTTP at: `https://your-domain.com/mcp/`
+   - Connect MCP clients using: `https://your-domain.com/mcp/`
+
+### Option 2: Cloudflare Workers Proxy
+
+For Cloudflare-specific deployment:
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Deploy**:
+   ```bash
+   npm run deploy
+   ```
+
+3. **Set environment variables** in Cloudflare Dashboard:
+   - `FASTMCP_SERVER_URL`: URL of your deployed FastMCP server
+
+### Configuration Files
+
+- `wrangler.toml`: Cloudflare Workers configuration
+- `Dockerfile`: Container configuration for cloud deployment
+- `deploy.sh`: Automated deployment script
+
 ## Development
 
 This server is built with:

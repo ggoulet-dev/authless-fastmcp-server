@@ -1,0 +1,17 @@
+{
+  "name": "authless-fastmcp-server",
+  "version": "1.0.0",
+  "description": "A simple MCP server with weather tool deployed on Cloudflare",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "mkdir -p dist && cp -r authless_fastmcp_server dist/",
+    "deploy": "./deploy.sh",
+    "dev": "uv run python -m authless_fastmcp_server.main"
+  },
+  "keywords": ["mcp", "fastmcp", "cloudflare", "weather"],
+  "author": "Gabriel",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.78.12"
+  }
+}
